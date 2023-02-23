@@ -1,8 +1,8 @@
-kc_webserver: kc_webserver.o
-	gcc kc_webserver.o -o kc_webserver
+kath_webserv: kath_webserv.o
+	gcc kath_webserv.o -o kath_webserv
 
-kc_webserver.o: kc_webserver.c
-	gcc -c kc_webserver.c -o kc_webserver.o
+kath_webserv.o: kath_webserv.c
+	gcc -c kath_webserv.c -o kath_webserv.o
 
 clean:
-	rm -f kc_webserver *.o
+	rm -f kath_webserv *.o
