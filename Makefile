@@ -1,8 +1,8 @@
-noopserv: noopserv.o
-	gcc noopserv.o -o noopserv
+http_webserv: http_webserv.o
+	gcc http_webserv.o -o http_webserv
 
-noopserv.o: noopserv.c
-	gcc -c noopserv.c -o noopserv.o
+http_webserv.o: http_webserv.c
+	gcc -c http_webserv.c -o http_webserv.o
 
 clean:
-	rm -f noopserv *.o
+	rm -f http_webserv *.o

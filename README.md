@@ -1,4 +1,4 @@
-# WIP: noopserv
+# http_webserv
 
 ## Description
-A light-weight, multi-threaded web server in C.
+WIP
