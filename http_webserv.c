@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -17,7 +18,10 @@ int main() {
     struct sockaddr_in server_addr, client_addr;
     socklen_t server_addr_len, client_addr_len;
     char read_buffer[1024];
+    char write_buffer[1024];
+    char html_response[1024];
     ssize_t num_bytes_read;
+    int snprintf_len;
 
     /* Create server socket */
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -53,13 +57,34 @@ int main() {
         }
 
         printf("Connection request from: %s\n", inet_ntoa(client_addr.sin_addr));
-
         if((num_bytes_read = read(client_fd, read_buffer, sizeof(read_buffer))) < 0) {
-            perror("http_webserv (read)");
+            perror("http_webserv (read failed)");
             continue;
         }
-        printf("Message from client: %s\n", read_buffer);
 
+        /* End read buffer with null terminating character */
+        read_buffer[num_bytes_read] = '\0';
+        printf("Bytes read from client = %zd. Message is [%s]\n", num_bytes_read, read_buffer);
+
+        /* Write the read buffer back to the client */
+        snprintf_len = snprintf(html_response, sizeof(html_response), "%s\n%s\n%s\n",
+                                "<html>",
+                                read_buffer,
+                                "</html>");
+        /* Null terminate html response */
+        html_response[snprintf_len] = '\0';
+
+        snprintf_len = snprintf(write_buffer, sizeof(write_buffer), "%s\n%s\n%s\n\n%s\n",
+                                "HTTP/1.1 200 OK",
+                                "Server: http_webserv",
+                                "Content-Type: text/html",
+                                html_response);
+        /* Null terminate write buffer */
+        write_buffer[snprintf_len] = '\0';
+
+        if(send(client_fd, write_buffer, strlen(write_buffer), 0) < 0) {
+            perror("http_webserv (write failed)");
+        }
     }
 
     return 0;
