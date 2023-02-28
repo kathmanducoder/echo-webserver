@@ -15,7 +15,7 @@ int main() {
     int server_fd;
     struct sockaddr_in server_addr;
 
-    if((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
@@ -26,6 +26,11 @@ int main() {
 
     if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) != 0) {
         perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_fd, SOMAXCONN) != 0) {
+        perror("listen failed");
         exit(EXIT_FAILURE);
     }
 
