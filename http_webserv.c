@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 #define PORT 8080
 
@@ -15,6 +16,8 @@ int main() {
     int server_fd, client_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t server_addr_len, client_addr_len;
+    char read_buffer[1024];
+    ssize_t num_bytes_read;
 
     /* Create server socket */
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -46,9 +49,16 @@ int main() {
 
         if((client_fd = accept(server_fd, (struct sockaddr *)&client_addr, (socklen_t*)&client_addr_len)) < 0) {
             perror("http_webserv (accept failed)");
+            continue;
         }
 
         printf("Connection request from: %s\n", inet_ntoa(client_addr.sin_addr));
+
+        if((num_bytes_read = read(client_fd, read_buffer, sizeof(read_buffer))) < 0) {
+            perror("http_webserv (read)");
+            continue;
+        }
+        printf("Message from client: %s\n", read_buffer);
 
     }
 
