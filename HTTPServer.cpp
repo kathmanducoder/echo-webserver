@@ -24,9 +24,12 @@ HTTPServer::HTTPServer(int port) {
     }
 }
 
-HTTPServer::~HTTPServer() {}
+HTTPServer::~HTTPServer() {
+    /* Close the socket */
+    close(this->server_fd);
+}
 
-void HTTPServer::run() {
+void HTTPServer::start() {
     int client_fd;
     struct sockaddr_in client_addr;
     socklen_t client_addr_len;

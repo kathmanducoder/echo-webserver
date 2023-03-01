@@ -15,7 +15,8 @@ using namespace std;
 int main() {
     try {
         HTTPServer http_server(HTTP_SERVER_PORT);
-        http_server.run();
+        /* Start the server */
+        http_server.start();
     } catch(const exception& e) {
         cerr << "http_webserv failed with an exception! Exiting program.";
     }
