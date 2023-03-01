@@ -12,12 +12,13 @@
 #include <unistd.h>
 
 #define PORT 8080
+#define SOCK_DATA_BUFFER 1024
 
 int main() {
     int server_fd, client_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t server_addr_len, client_addr_len;
-    char read_buffer[1024];
+    char *read_buffer = NULL;
     char write_buffer[1024];
     char html_response[1024];
     ssize_t num_bytes_read;
@@ -47,6 +48,13 @@ int main() {
 
     printf("Webserver started. Listening on port = %d\n", PORT);
 
+    /* Allocate memory for buffers */
+    if((read_buffer = (char *) malloc(SOCK_DATA_BUFFER * sizeof(char))) == NULL) {
+        perror("http_webserv (malloc failed)");
+        exit(EXIT_FAILURE);
+    }
+
+
     /* Enter an infinite loop to listen for (and process) incoming connectsions */
     for(;;) {
         client_addr_len = sizeof(client_addr);
@@ -57,7 +65,7 @@ int main() {
         }
 
         printf("Connection request from: %s\n", inet_ntoa(client_addr.sin_addr));
-        if((num_bytes_read = read(client_fd, read_buffer, sizeof(read_buffer))) < 0) {
+        if((num_bytes_read = read(client_fd, read_buffer, SOCK_DATA_BUFFER)) < 0) {
             perror("http_webserv (read failed)");
             continue;
         }
@@ -87,5 +95,6 @@ int main() {
         }
     }
 
+    free(read_buffer);
     return 0;
 }
