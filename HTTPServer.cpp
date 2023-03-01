@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "HTTPServer.h"
+#include "HTMLBuilder.h"
 
 HTTPServer::HTTPServer(int port) {
     this->server_port = port;
@@ -46,6 +47,8 @@ void HTTPServer::start() {
     char                http_resp[HTTP_RESP_LEN];
     ssize_t             http_resp_num_bytes;
 
+    HTMLBuilder         html_builder;
+
     /* Listen for incoming connections */
     if (listen(this->server_fd, SOMAXCONN) != 0) {
         std::cerr << "http_webserv (listen failed)." << std::endl;
@@ -74,12 +77,13 @@ void HTTPServer::start() {
             std::cerr << "http_webserv (read failed)." << std::endl;
             continue;
         }
-        /* End read buffer with null terminating character */
+        /* End http req buffer with null terminating character */
         http_req[http_req_num_bytes] = '\0';
 
-        html_num_bytes = snprintf(html, sizeof(html), "%s\n%s\n%s\n", "<html>", http_req, "</html>");
-        /* Null terminate html response */
-        html[html_num_bytes] = '\0';
+        if (html_builder.build_html(html, HTML_LEN, http_req) != 0) {
+            std::cerr << "http_webserv (build_html failed)." << std::endl;
+            continue;
+        }
 
         http_resp_num_bytes = snprintf(http_resp, sizeof(http_resp), "%s\n%s\n%s\n\n%s\n",
                                 "HTTP/1.1 200 OK",
@@ -92,5 +96,8 @@ void HTTPServer::start() {
         if(send(client_fd, http_resp, strlen(http_resp), 0) < 0) {
             std::cerr << "http_webserv (send failed)." << std::endl;
         }
+
+        /* Close client fd */
+        close(client_fd);
     }
 }
