@@ -18,7 +18,7 @@ int main() {
         /* Start the server */
         http_server.start();
     } catch(const exception& e) {
-        cerr << "http_webserv failed with an exception! Exiting program.";
+        cerr << "http_webserv : shutting down the server." << endl;
     }
     return 0;
 }

@@ -1,6 +1,7 @@
 #include <exception>
 #include <iostream>
 #include <sys/socket.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "HTTPServer.h"
@@ -10,7 +11,7 @@ HTTPServer::HTTPServer(int port) {
 
     /* Create server socket */
     if ((this->server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        std::cerr << "http_webserv (socket failed).";
+        std::cerr << "http_webserv (socket failed)." << std::endl;
         throw std::runtime_error("http_webserv (socket failed).");
     }
 
@@ -19,7 +20,7 @@ HTTPServer::HTTPServer(int port) {
     this->server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     this->server_addr.sin_port = htons(this->server_port);
     if (bind(this->server_fd, (struct sockaddr*)&this->server_addr, sizeof(this->server_addr)) != 0) {
-        std::cerr << "http_webserv (bind failed).";
+        std::cerr << "http_webserv (bind failed)." << std::endl;
         throw std::runtime_error("http_webserv (bind failed).");
     }
 }
@@ -30,59 +31,66 @@ HTTPServer::~HTTPServer() {
 }
 
 void HTTPServer::start() {
-    int client_fd;
-    struct sockaddr_in client_addr;
-    socklen_t client_addr_len;
-    ssize_t num_bytes_read, num_bytes_written;
-    const int READ_BUFFER_LEN = 1024;
-    const int WRITE_BUFFER_LEN = 1024;
-    const int HTML_CONTENT_BUFFER_LEN = 4096;
-    char read_buffer[READ_BUFFER_LEN];
-    char html_response[HTML_CONTENT_BUFFER_LEN];
-    char write_buffer[WRITE_BUFFER_LEN];
-    int snprintf_len;
+    int                 client_fd;
+    struct sockaddr_in  client_addr;
+    socklen_t           client_addr_len;
+    time_t              now_time;
+    char                *now_str;
+    const int           HTTP_REQ_LEN = 1024;
+    char                http_req[HTTP_REQ_LEN];
+    ssize_t             http_req_num_bytes;
+    const int           HTML_LEN = 4096;
+    char                html[HTML_LEN];
+    ssize_t             html_num_bytes;
+    const int           HTTP_RESP_LEN = 8096;
+    char                http_resp[HTTP_RESP_LEN];
+    ssize_t             http_resp_num_bytes;
 
     /* Listen for incoming connections */
     if (listen(this->server_fd, SOMAXCONN) != 0) {
-        std::cerr << "http_webserv (listen failed).";
+        std::cerr << "http_webserv (listen failed)." << std::endl;
         throw std::runtime_error("http_webserv (listen failed).");
     }
 
-    std::cout << "Webserver started. Listening on port " << this->server_port << std::endl;
+    now_time = time(NULL);
+    now_str = ctime(&now_time);
+    now_str[strlen(now_str) - 1] = '\0';
+    std::cout << now_str << ": " << "http_webserv started on port " << this->server_port << std::endl;
+    std::cout << "                               ---           " << std::endl;
 
     for(;;) {
         client_addr_len = sizeof(client_addr);
         if((client_fd = accept(server_fd, (struct sockaddr *)&client_addr, (socklen_t*)&client_addr_len)) < 0) {
-            std::cerr << "http_webserv (accept failed).";
+            std::cerr << "http_webserv (accept failed)." << std::endl;
             continue;
         }
 
-        std::cout << "Connection request from "<< inet_ntoa(client_addr.sin_addr) << std::endl;
+        now_time = time(NULL);
+        now_str = ctime(&now_time);
+        now_str[strlen(now_str) - 1] = '\0';
+        std::cout << now_str << ": " << "Connection request from "<< inet_ntoa(client_addr.sin_addr) << " sockid = " << client_fd << std::endl;
         
-        if((num_bytes_read = read(client_fd, read_buffer, sizeof(read_buffer))) < 0) {
-            std::cerr << "http_webserv (read failed).";
+        if((http_req_num_bytes = read(client_fd, http_req, sizeof(http_req))) < 0) {
+            std::cerr << "http_webserv (read failed)." << std::endl;
             continue;
         }
         /* End read buffer with null terminating character */
-        read_buffer[num_bytes_read] = '\0';
+        http_req[http_req_num_bytes] = '\0';
 
-        snprintf_len = snprintf(html_response, sizeof(html_response), "%s\n%s\n%s\n",
-                                "<html>",
-                                read_buffer,
-                                "</html>");
+        html_num_bytes = snprintf(html, sizeof(html), "%s\n%s\n%s\n", "<html>", http_req, "</html>");
         /* Null terminate html response */
-        html_response[snprintf_len] = '\0';
+        html[html_num_bytes] = '\0';
 
-        snprintf_len = snprintf(write_buffer, sizeof(write_buffer), "%s\n%s\n%s\n\n%s\n",
+        http_resp_num_bytes = snprintf(http_resp, sizeof(http_resp), "%s\n%s\n%s\n\n%s\n",
                                 "HTTP/1.1 200 OK",
                                 "Server: http_webserv",
                                 "Content-Type: text/html",
-                                html_response);
+                                html);
         /* Null terminate write buffer */
-        write_buffer[snprintf_len] = '\0';
+        http_resp[http_resp_num_bytes] = '\0';
 
-        if(send(client_fd, write_buffer, strlen(write_buffer), 0) < 0) {
-            std::cerr << "http_webserv (send failed).";
+        if(send(client_fd, http_resp, strlen(http_resp), 0) < 0) {
+            std::cerr << "http_webserv (send failed)." << std::endl;
         }
     }
 }
