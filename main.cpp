@@ -1,5 +1,5 @@
 /*
- * A simple web server in C that responds back with contents of the incoming
+ * A simple web server in C++ that responds back with contents of the incoming
  * HTTP header in its 200 OK response body.
  */
 
