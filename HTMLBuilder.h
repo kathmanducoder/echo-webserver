@@ -3,7 +3,7 @@
 
 class HTMLBuilder {
     public:
-        int build_html(char html[], int html_len, char content[]);
+        int build_html(char html[], int html_len, char content[], char *client_ip);
 };
 
 #endif

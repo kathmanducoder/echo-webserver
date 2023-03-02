@@ -80,7 +80,7 @@ void HTTPServer::start() {
         /* End http req buffer with null terminating character */
         http_req[http_req_num_bytes] = '\0';
 
-        if (html_builder.build_html(html, HTML_LEN, http_req) != 0) {
+        if (html_builder.build_html(html, HTML_LEN, http_req, inet_ntoa(client_addr.sin_addr)) != 0) {
             std::cerr << "http_webserv (build_html failed)." << std::endl;
             continue;
         }
