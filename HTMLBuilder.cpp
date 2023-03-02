@@ -15,7 +15,7 @@ int HTMLBuilder::build_html(char html[], int html_len, char content[], char *cli
                             "</head>");
 
     string_index += snprintf(html + string_index, html_len, "%s\n%s\n%s\n%s\n%s\n%s%s%s\n%s\n%s\n%s\n",
-                             "<body>",
+                             "<body style=\"background-image: linear-gradient(to bottom right, #F5F7FA, #B8C6DB);\">",
                              "<div class=\"container\">",
                              "<div class=\"row row-top-buffer justify-content-center\">",
                              "<div class=\"col-lg-8\">",
