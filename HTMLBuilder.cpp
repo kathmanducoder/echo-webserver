@@ -14,16 +14,26 @@ int HTMLBuilder::build_html(char html[], int html_len, char content[], char *cli
                             "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC\" crossorigin=\"anonymous\">",
                             "</head>");
 
-    string_index += snprintf(html + string_index, html_len, "%s\n%s\n%s\n%s\n%s\n%s\n%s%s%s\n",
+    string_index += snprintf(html + string_index, html_len, "%s\n%s\n%s\n%s\n%s\n%s%s%s\n%s\n%s\n%s\n",
                              "<body>",
                              "<div class=\"container\">",
                              "<div class=\"row row-top-buffer justify-content-center\">",
                              "<div class=\"col-lg-8\">",
-                             "<div class=\"card shadow p-3 mt-5 mb-5 bg-white rounded text-muted\">",
-                             "<ul style=\"list-style-type: none;\">",
-                             "<li style=\"margin:10px; font-weight:bold; text-align:center; color:gold; font-size: 28px;\"> I KNOW YOUR IP: ",
+                             "<div class=\"card shadow p-3 mt-5 mb-3 bg-white rounded text-muted\">",
+                             "<div style=\"margin:10px; font-weight:bold; text-align:center; color:gold; font-size: 28px;\"> I KNOW YOUR IP: ",
                              client_ip,
-                             "</li>");
+                             "</div>",
+                             "</div>",
+                             "</div>",
+                             "</div>");
+
+    string_index += snprintf(html + string_index, html_len, "%s\n%s\n%s\n%s\n%s\n",
+                             "<div class=\"row row-top-buffer justify-content-center\">",
+                             "<div class=\"col-lg-8\">",
+                             "<div class=\"card shadow p-3 mt-3 mb-3 bg-white rounded text-muted\">",
+                             "<ul style=\"list-style-type: none;\">",
+                             "<li style=\"margin:10px; font-size: 24px; text-align:center; color:gold;\"> Here is what else I see in your header </li>");
+
 
     token = strtok(content, "\n");
     while (token != NULL) {
