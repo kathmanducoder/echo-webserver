@@ -58,8 +58,7 @@ void HTTPServer::start() {
     now_time = time(NULL);
     now_str = ctime(&now_time);
     now_str[strlen(now_str) - 1] = '\0';
-    std::cout << now_str << ": " << "http_webserv started on port " << this->server_port << std::endl;
-    std::cout << "                               ---           " << std::endl;
+    std::cout << now_str << " -> " << "http_webserv started on port " << this->server_port << std::endl;
 
     for(;;) {
         client_addr_len = sizeof(client_addr);
@@ -71,7 +70,7 @@ void HTTPServer::start() {
         now_time = time(NULL);
         now_str = ctime(&now_time);
         now_str[strlen(now_str) - 1] = '\0';
-        std::cout << now_str << ": " << "Connection request from "<< inet_ntoa(client_addr.sin_addr) << " sockid = " << client_fd << std::endl;
+        std::cout << now_str << " -> " << "Connection request from "<< inet_ntoa(client_addr.sin_addr) << " sockid = " << client_fd << std::endl;
         
         if((http_req_num_bytes = read(client_fd, http_req, sizeof(http_req))) < 0) {
             std::cerr << "http_webserv (read failed)." << std::endl;
