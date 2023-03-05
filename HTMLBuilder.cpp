@@ -15,12 +15,12 @@ int HTMLBuilder::build_html(char html[], int html_len, char content[], char *cli
                             "</head>");
 
     string_index += snprintf(html + string_index, html_len, "%s\n%s\n%s\n%s\n%s\n%s%s%s\n%s\n%s\n%s\n",
-                             "<body style=\"background-image: linear-gradient(to bottom right, #F5F7FA, #B8C6DB);\">",
+                             "<body style=\"background-image: linear-gradient(to bottom right, #7F8C8D, #000000);\">",
                              "<div class=\"container\">",
                              "<div class=\"row row-top-buffer justify-content-center\">",
                              "<div class=\"col-lg-8\">",
-                             "<div class=\"card shadow p-3 mt-5 mb-3 bg-white rounded text-muted\">",
-                             "<div style=\"margin:10px; font-weight:bold; text-align:center; color:gold; font-size: 28px;\"> I KNOW YOUR IP: ",
+                             "<div class=\"card shadow p-3 mt-5 mb-3 bg-secondary rounded text-muted\">",
+                             "<div style=\"margin:10px; font-weight:bold; text-align:center; color:#E57254; font-size: 24px;\"> The webserver sees your IP : ",
                              client_ip,
                              "</div>",
                              "</div>",
@@ -30,9 +30,9 @@ int HTMLBuilder::build_html(char html[], int html_len, char content[], char *cli
     string_index += snprintf(html + string_index, html_len, "%s\n%s\n%s\n%s\n%s\n",
                              "<div class=\"row row-top-buffer justify-content-center\">",
                              "<div class=\"col-lg-8\">",
-                             "<div class=\"card shadow p-3 mt-3 mb-3 bg-white rounded text-muted\">",
+                             "<div class=\"card bg-dark shadow p-3 mt-3 mb-3 rounded text-muted\">",
                              "<ul style=\"list-style-type: none;\">",
-                             "<li style=\"margin:10px; font-size: 24px; text-align:center; color:gold;\"> Here is what else I see in your header </li>");
+                             "<li style=\"margin:10px; font-size: 22px; text-align:center; color:#46BCDE;\"> Here is what else the server sees in the request header</li>");
 
 
     token = strtok(content, "\n");
