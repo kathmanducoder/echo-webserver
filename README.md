@@ -1,7 +1,7 @@
 # echo_webserver
 
 ## Description
-A web server that echo backs the HTTP request by adding CSS style to it using Bootstrap frontend framework.
+A web server that echoes back the HTTP request by adding CSS style to it using Bootstrap frontend framework.
 
 ## Installation
 The project comes with a Makefile. Please follow the steps below to make the executable and launch the server.
