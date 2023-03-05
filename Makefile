@@ -11,4 +11,4 @@ HTMLBuilder.o: HTMLBuilder.cpp
 	g++ -c HTMLBuilder.cpp -o HTMLBuilder.o
 
 clean:
-	rm -f http_webserv *.o
+	rm -f echo_webserver *.o
