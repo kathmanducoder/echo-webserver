@@ -1,3 +1,3 @@
 *.o
-http_webserv
+echo_webserver
 .vscode
