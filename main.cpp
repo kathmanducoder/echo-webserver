@@ -18,7 +18,7 @@ int main() {
         /* Start the server */
         http_server.start();
     } catch(const exception& e) {
-        cerr << "echo_webserver : shutting down the server." << endl;
+        cerr << "echowebserver : shutting down the server." << endl;
     }
     return 0;
 }

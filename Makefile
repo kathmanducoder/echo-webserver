@@ -1,5 +1,5 @@
-echo_webserver: main.o HTTPServer.o HTMLBuilder.o
-	g++ -o echo_webserver main.o HTTPServer.o HTMLBuilder.o
+echowebserver: main.o HTTPServer.o HTMLBuilder.o
+	g++ -o echowebserver main.o HTTPServer.o HTMLBuilder.o
 
 main.o: main.cpp
 	g++ -c main.cpp -o main.o
@@ -11,4 +11,4 @@ HTMLBuilder.o: HTMLBuilder.cpp
 	g++ -c HTMLBuilder.cpp -o HTMLBuilder.o
 
 clean:
-	rm -f echo_webserver *.o
+	rm -f echowebserver *.o
